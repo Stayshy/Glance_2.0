@@ -176,9 +176,8 @@ fun BoundingBoxOverlay(
     labels: (Int) -> String
 ) {
     Canvas(modifier = modifier) {
-        val modelInputSize = 640f
-        val scaleX = size.width / modelInputSize
-        val scaleY = size.height / modelInputSize
+        val scaleX = size.width / previewWidth.toFloat()
+        val scaleY = size.height / previewHeight.toFloat()
 
         results.forEach { result ->
             val rect = result.box
@@ -188,10 +187,10 @@ fun BoundingBoxOverlay(
             val bottom = rect.bottom * scaleY
 
             drawRect(
-                color = Color.Red,
+                color = Color(0xFFFF0000),
                 topLeft = Offset(left, top),
                 size = Size(right - left, bottom - top),
-                style = Stroke(width = 4f)
+                style = Stroke(width = 6f)
             )
 
             drawContext.canvas.nativeCanvas.drawText(
@@ -200,7 +199,7 @@ fun BoundingBoxOverlay(
                 top - 10,
                 Paint().apply {
                     color = android.graphics.Color.RED
-                    textSize = 36f
+                    textSize = 32f
                     style = Paint.Style.FILL
                     isAntiAlias = true
                 }
@@ -284,7 +283,7 @@ fun processImageProxy(
             val canvas = Canvas(outputBitmap)
             val paint = Paint().apply {
                 color = android.graphics.Color.RED
-                strokeWidth = 4f
+                strokeWidth = 6f
                 style = Paint.Style.STROKE
             }
             val textPaint = Paint().apply {

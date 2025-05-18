@@ -73,7 +73,7 @@ class ObjectDetector(context: Context) {
             val h = outputArray[3][i]
             val objConf = outputArray[4][i]
 
-            if (objConf < 0.5f) continue // фильтр слабых объектов
+            if (objConf < 0.6f) continue // фильтр слабых объектов
 
             // Найдем класс с максимальным score
             var maxScore = 0f
@@ -88,14 +88,14 @@ class ObjectDetector(context: Context) {
 
             // Итоговая уверенность: objConf * classScore (по правилам YOLO)
             val finalScore = objConf * maxScore
-            if (finalScore > 0.6f && classIdx in labels.indices){
-                val left = x - w / 2
-                val top = y - h / 2
-                val right = x + w / 2
-                val bottom = y + h / 2
+            if (finalScore > 0.65f && classIdx in labels.indices){
+                val left = (x - w / 2).coerceIn(0f, inputSize.toFloat())
+                val top = (y - h / 2).coerceIn(0f, inputSize.toFloat())
+                val right = (x + w / 2).coerceIn(0f, inputSize.toFloat())
+                val bottom = (y + h / 2).coerceIn(0f, inputSize.toFloat())
                 val boxWidth = right - left
                 val boxHeight = bottom - top
-                if (boxWidth < 20f || boxHeight < 20f) continue
+                if (boxWidth < 30f || boxHeight < 30f) continue
 
                 detections.add(
                     DetectionResult(
@@ -107,7 +107,7 @@ class ObjectDetector(context: Context) {
             }
         }
 
-        return applyNMS(detections, iouThreshold = 0.4f)
+        return applyNMS(detections, iouThreshold = 0.6f)
     }
 
     private fun applyNMS(detections: List<DetectionResult>, iouThreshold: Float = 0.5f): List<DetectionResult> {
