@@ -19,7 +19,7 @@ class ObjectDetector(context: Context) {
 
     init {
         // Загрузка модели
-        val modelBytes = context.assets.open("best.onnx").readBytes()
+        val modelBytes = context.assets.open("best000.onnx").readBytes()
         session = ortEnvironment.createSession(modelBytes)
 
         // Получение имени входного тензора
